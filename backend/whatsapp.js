@@ -3,6 +3,8 @@ const qrcode = require('qrcode-terminal');
 const EventEmitter = require('events');
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
+const http = require('http');
 
 // Ensure puppeteer is available
 let puppeteer;
@@ -685,6 +687,111 @@ class WhatsAppClient extends EventEmitter {
     return null;
   }
 
+  async callAiApi(userMessage, conversationHistory = []) {
+    try {
+      // Build system prompt for Jarvis-like helpful, positive, emoji-rich responses
+      const systemPrompt = `You are Jarvis, an intelligent and helpful AI assistant. Your responses should be:
+- Always helpful, positive, and friendly
+- Use appropriate emojis to make responses engaging and warm (but don't overuse them)
+- IMPORTANT: Use DIFFERENT emojis each time - never repeat the same emoji in consecutive messages
+- Vary emojis based on the context and content of your response (use relevant emojis that match the topic)
+- Choose emojis that enhance the message meaning (e.g., 🎉 for celebrations, 💡 for ideas, ✅ for confirmations, 🚀 for progress, etc.)
+- Rotate through different emoji types to keep responses fresh and engaging
+- Respond in the same language as the user's message automatically
+- Be concise but thorough
+- Show enthusiasm and willingness to help
+- Use a professional yet friendly tone
+- Understand the context and intent of the user's message deeply
+- Provide smart, contextual responses that directly address what the user is saying
+- Give direct answers and solutions without always asking follow-up questions
+- Only ask questions when absolutely necessary for clarification
+- Be conversational and natural - respond as if you understand the full context
+- If the user makes a statement, acknowledge it appropriately without turning it into a question
+- If the user asks a question, provide a clear and helpful answer directly
+- If the user needs assistance, offer practical solutions immediately
+- Avoid repetitive question patterns - vary your responses
+- Be proactive in providing information rather than always asking what they need
+- Always end on a positive note
+
+Remember: Automatically match the language of the user's message. Understand the message deeply and provide smart, contextual replies without unnecessary questions. Always use different and contextually relevant emojis - never repeat the same emoji pattern.`;
+
+      // Build messages array
+      const messages = [];
+      
+      // Add system prompt as first message
+      messages.push({
+        role: 'user',
+        content: systemPrompt
+      });
+      
+      // Add conversation history (last 10 messages for context)
+      const recentHistory = conversationHistory.slice(-10);
+      recentHistory.forEach(msg => {
+        messages.push({
+          role: msg.fromMe ? 'user' : 'assistant',
+          content: msg.body || ''
+        });
+      });
+      
+      // Add current user message
+      messages.push({
+        role: 'user',
+        content: userMessage
+      });
+
+      // Call AI API
+      const url = new URL('https://api.a0.dev/ai/llm');
+      const postData = JSON.stringify({ messages });
+
+      return new Promise((resolve, reject) => {
+        const options = {
+          hostname: url.hostname,
+          port: url.port || 443,
+          path: url.pathname,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(postData)
+          }
+        };
+
+        const req = https.request(options, (res) => {
+          let data = '';
+
+          res.on('data', (chunk) => {
+            data += chunk;
+          });
+
+          res.on('end', () => {
+            try {
+              if (res.statusCode !== 200) {
+                throw new Error(`AI API error: ${res.statusCode}`);
+              }
+
+              const response = JSON.parse(data);
+              const completion = response.completion || 'Sorry, I could not generate a response.';
+              resolve(completion);
+            } catch (error) {
+              console.error('Error parsing AI API response:', error);
+              reject(error);
+            }
+          });
+        });
+
+        req.on('error', (error) => {
+          console.error('AI API request error:', error);
+          reject(error);
+        });
+
+        req.write(postData);
+        req.end();
+      });
+    } catch (error) {
+      console.error('Error in callAiApi:', error);
+      throw error;
+    }
+  }
+
   async getChats() {
     if (!this.isConnected || !this.client) {
       throw new Error('WhatsApp is not connected');
@@ -1003,7 +1110,7 @@ class WhatsAppClient extends EventEmitter {
         return false;
       }
       
-      console.log('✅ Client is connected, proceeding with automated reply');
+      console.log('✅ Client is connected, proceeding with AI-based automated reply');
 
       // Extract phone number from chatId (format: 1234567890@c.us)
       const phone = chatId.split('@')[0];
@@ -1013,334 +1120,51 @@ class WhatsAppClient extends EventEmitter {
         return false;
       }
       
-      console.log('Processing automated reply for phone:', phone, 'message:', messageBody.substring(0, 50));
+      console.log('🤖 Processing AI-based automated reply for phone:', phone, 'message:', messageBody.substring(0, 50));
       
-      // Check if user is in an active flow
-      const activeFlow = this.db.getActiveFlowForPhone(phone);
-      console.log('Active flow check:', activeFlow ? 'Found flow ID: ' + activeFlow.flowId + ', StepId: ' + activeFlow.currentStepId : 'No active flow');
-      
-      // Check if there are active flows available
-      let activeFlows;
+      // Get conversation history for AI context
+      let conversationHistory = [];
       try {
-        activeFlows = this.db.getActiveAutomatedMessages();
-        console.log('Available active flows:', activeFlows ? activeFlows.length : 0);
-      } catch (flowsError) {
-        console.error('❌ Error getting active flows:', flowsError);
-        activeFlows = [];
+        const chat = await this.client.getChatById(chatId);
+        if (chat) {
+          const messages = await chat.fetchMessages({ limit: 10 });
+          conversationHistory = messages.map(msg => ({
+            body: msg.body || '',
+            fromMe: msg.fromMe || false
+          }));
+        }
+      } catch (historyError) {
+        console.log('Could not fetch conversation history for AI:', historyError.message);
       }
       
-      // Check if message is a trigger word that should restart the flow
-      const triggerWords = ['hi', 'hello', 'start', 'hey', 'help', 'hola', 'namaste', 'hey there', 'restart', 'begin'];
-      const lowerMessage = messageBody.toLowerCase().trim();
-      const isTriggerWord = triggerWords.some(word => lowerMessage.includes(word));
+      // Call AI API with user's message
+      let aiResponse = null;
+      try {
+        console.log('🤖 Calling AI API with user message:', messageBody.substring(0, 50));
+        aiResponse = await this.callAiApi(messageBody, conversationHistory);
+        console.log('✅ AI API response received:', aiResponse ? aiResponse.substring(0, 50) : '(empty)');
+      } catch (aiError) {
+        console.error('❌ Error calling AI API:', aiError);
+        console.error('AI API error details:', aiError.message);
+        // Don't send anything if AI fails - return false so other handlers can process
+        return false;
+      }
       
-      // If user has an active flow AND message is NOT a trigger word, process their response
-      // If message IS a trigger word, restart the flow instead
-      if (activeFlow && (activeFlow.flowId || activeFlow.id) && activeFlows && activeFlows.length > 0 && !isTriggerWord) {
-        const flowId = activeFlow.flowId || activeFlow.id;
-        console.log('User is in active flow, flowId:', flowId, 'processing response (not a trigger word)');
-        // User is in a flow, process their response
-        let result;
+      // Send AI response
+      if (aiResponse && aiResponse.trim()) {
         try {
-          result = this.db.processResponse(phone, messageBody);
-          console.log('Process response result:', result ? (result.type || 'step') : 'null');
-        } catch (processError) {
-          console.error('❌ Error processing response:', processError);
-          console.error('Error stack:', processError.stack);
+          await this.client.sendMessage(chatId, aiResponse.trim());
+          console.log('✅ Sent AI-based automated reply to', phone);
+          return true; // Message sent, handled by automated reply
+        } catch (sendError) {
+          console.error('❌ Error sending AI response:', sendError);
+          console.error('Error details:', sendError.message);
           return false;
         }
-        
-        if (result && result.step) {
-          // Send next question
-          let replyMessage = result.step.question || '';
-          console.log('Sending next step - Question:', replyMessage ? replyMessage.substring(0, 50) : '(empty)', 'Type:', result.type);
-          
-          // Check if question is empty - if so, skip sending or use a default message
-          if (!replyMessage || !replyMessage.trim()) {
-            console.log('⚠️ Step has no question text, skipping message send. Step ID:', result.step.id);
-            // Don't send empty message, but still return true since we processed the response
-            return true;
-          }
-          
-          // Get options for this step if not already in result
-          let stepOptions = result.options || [];
-          if (!stepOptions || stepOptions.length === 0) {
-            try {
-              stepOptions = this.db.getStepOptions(result.step.id) || [];
-            } catch (optError) {
-              console.error('Error getting step options:', optError);
-              stepOptions = [];
-            }
-          }
-          console.log('Step options count:', stepOptions ? stepOptions.length : 0);
-          
-          // Double-check replyMessage is still valid before sending
-          replyMessage = replyMessage.trim();
-          if (!replyMessage) {
-            console.log('⚠️ Reply message is empty after trim, skipping send. Step ID:', result.step.id);
-            return true;
-          }
-          
-          // If it's a form step, ask for the specific field
-          if (result.step.isFormStep || result.type === 'form_next') {
-            const formQuestion = result.step.question || '';
-            if (!formQuestion || !formQuestion.trim()) {
-              console.log('⚠️ Form step has no question text, skipping send. Step ID:', result.step.id);
-              return true;
-            }
-            // Send plain text for form steps
-            try {
-              await this.client.sendMessage(chatId, formQuestion.trim());
-              console.log('✅ Sent form question to', phone, '- Message sent successfully');
-              return true; // Message sent, handled by automated flow
-            } catch (sendError) {
-              console.error('❌ Error sending form question:', sendError);
-              console.error('Error details:', sendError.message, 'ChatId:', chatId);
-              return false;
-            }
-          } else if (stepOptions && stepOptions.length > 0) {
-            // Buttons are deprecated in WhatsApp, use plain text with numbered options
-            console.log('Sending with options (plain text format), count:', stepOptions.length);
-            
-            // Send as plain text message with numbered options
-            try {
-              let textMessage = replyMessage + '\n\nPlease reply with one of the following:\n';
-              stepOptions.forEach((opt, index) => {
-                if (opt.optionUrl) {
-                  textMessage += `${index + 1}. ${opt.optionText} (${opt.optionUrl})\n`;
-                } else {
-                  textMessage += `${index + 1}. ${opt.optionText}\n`;
-                }
-              });
-              await this.client.sendMessage(chatId, textMessage);
-              console.log('✅ Sent automated reply (plain text) to', phone, '- Message sent successfully');
-              return true; // Message sent, handled by automated flow
-            } catch (sendError) {
-              console.error('❌ Error sending automated reply:', sendError);
-              return false;
-            }
-          } else {
-            // No options, just send the message - but verify it's not empty
-            if (!replyMessage || !replyMessage.trim()) {
-              console.log('⚠️ Cannot send empty message, skipping. Step ID:', result.step.id);
-              return true;
-            }
-            try {
-              await this.client.sendMessage(chatId, replyMessage);
-              console.log('✅ Sent automated reply to', phone);
-              return true; // Message sent, handled by automated flow
-            } catch (sendError) {
-              console.error('Error sending automated reply:', sendError);
-              return false;
-            }
-          }
-        } else if (result && (result.completed || result.type === 'form_completed')) {
-          // Flow completed - form data already saved in processResponse
-          try {
-            await this.client.sendMessage(chatId, '✅ Thank you for completing the flow! Your information has been saved.');
-            console.log('✅ Flow completed for', phone);
-            return true; // Message sent, handled by automated flow
-          } catch (sendError) {
-            console.error('❌ Error sending completion message:', sendError);
-            console.error('Error details:', sendError.message);
-            return false;
-          }
-        } else if (result && result.type === 'no_match') {
-          // No match found, ask again with buttons
-          let replyMessage = result.step.question + '\n\n⚠️ Your response did not match any option. Please try again.';
-          
-          // Get options for the step
-          let stepOptions = result.options || [];
-          if (!stepOptions || stepOptions.length === 0) {
-            try {
-              stepOptions = this.db.getStepOptions(result.step.id) || [];
-            } catch (optError) {
-              console.error('Error getting step options for no_match:', optError);
-              stepOptions = [];
-            }
-          }
-          
-          if (stepOptions && stepOptions.length > 0) {
-            try {
-              // Buttons are deprecated in WhatsApp, use plain text with numbered options
-              let textMessage = replyMessage + '\n\nOptions:\n';
-              stepOptions.forEach((opt, index) => {
-                if (opt.optionUrl) {
-                  textMessage += `${index + 1}. ${opt.optionText} (${opt.optionUrl})\n`;
-                } else {
-                  textMessage += `${index + 1}. ${opt.optionText}\n`;
-                }
-              });
-              await this.client.sendMessage(chatId, textMessage);
-              console.log('✅ Sent no-match message (plain text) to', phone);
-              return true; // Message sent, handled by automated flow
-            } catch (sendError) {
-              console.error('❌ Error sending no-match message:', sendError);
-              return false;
-            }
-          } else {
-            try {
-              await this.client.sendMessage(chatId, replyMessage);
-              console.log('✅ Sent no-match message to', phone);
-              return true; // Message sent, handled by automated flow
-            } catch (sendError) {
-              console.error('Error sending no-match message:', sendError);
-              return false;
-            }
-          }
-        }
+      } else {
+        console.log('⚠️ AI API returned empty response, skipping send');
+        return false;
       }
-      
-      // No active flow OR user sent a trigger message - start/restart a flow
-      // Always start flow for any message if no active flow exists, or if message matches trigger
-      if (activeFlows && activeFlows.length > 0) {
-        // Start flow if:
-        // 1. No active flow exists (start for ANY message)
-        // 2. OR message matches trigger words (restart flow even if active)
-        const shouldStart = !activeFlow || isTriggerWord || 
-                           (lowerMessage.length <= 20 && /^[a-z\s]+$/i.test(lowerMessage));
-        console.log('Flow start check - message:', lowerMessage, 'shouldStart:', shouldStart, 'hasActiveFlow:', !!activeFlow, 'isTriggerWord:', isTriggerWord);
-        
-        if (shouldStart) {
-          // If user has an active flow and wants to restart, reset it to first step and send message
-          if (activeFlow && isTriggerWord) {
-            console.log('User has active flow but trigger matched, restarting flow from beginning');
-            // Reset the existing flow to first step
-            const flowToReset = activeFlows.find(f => f.id === activeFlow.flowId) || activeFlows[0];
-            const firstStep = this.db.getFirstStepOfFlow(flowToReset.id);
-            if (firstStep) {
-              // Reset to first step using database method
-              // We need to update the response directly
-              try {
-                const updateStmt = this.db.db.prepare(`
-                  UPDATE automated_message_responses 
-                  SET currentStepId = ?, lastInteractionAt = CURRENT_TIMESTAMP, formData = '{}', status = 'active'
-                  WHERE id = ?
-                `);
-                updateStmt.run(firstStep.id, activeFlow.id);
-                console.log('Flow reset to first step in database');
-              } catch (updateError) {
-                console.error('Error updating flow in database:', updateError);
-              }
-              console.log('Flow reset to first step:', firstStep.question.substring(0, 50));
-              
-              // Send first step message immediately
-              let welcomeMessage = firstStep.question;
-              let options = [];
-              try {
-                options = this.db.getStepOptions(firstStep.id) || [];
-                console.log('First step options count:', options.length);
-              } catch (optError) {
-                console.error('Error getting first step options:', optError);
-                options = [];
-              }
-              
-              if (options && options.length > 0 && !firstStep.isFormStep) {
-                // Buttons are deprecated in WhatsApp, use plain text with numbered options
-                try {
-                  let textMessage = welcomeMessage + '\n\nPlease reply with one of the following:\n';
-                  options.forEach((opt, index) => {
-                    if (opt.optionUrl) {
-                      textMessage += `${index + 1}. ${opt.optionText} (${opt.optionUrl})\n`;
-                    } else {
-                      textMessage += `${index + 1}. ${opt.optionText}\n`;
-                    }
-                  });
-                  await this.client.sendMessage(chatId, textMessage);
-                  console.log('✅ Restarted flow (plain text) for', phone);
-                  return true; // Exit early, message already sent - handled by automated flow
-                } catch (sendError) {
-                  console.error('❌ Error sending restart message:', sendError);
-                  return false;
-                }
-              } else {
-                // No options or form step, send plain text
-                try {
-                  await this.client.sendMessage(chatId, welcomeMessage);
-                  console.log('✅ Restarted flow for', phone, '- Message sent successfully');
-                  return true; // Exit early, message already sent - handled by automated flow
-                } catch (sendError) {
-                  console.error('❌ Error sending restart message:', sendError);
-                  return false;
-                }
-              }
-            }
-          }
-          
-          // Start the first active flow (for new users or if restart didn't work)
-          const flowToStart = activeFlows[0];
-          const started = this.db.startFlowForPhone(flowToStart.id, phone);
-          console.log('Flow start result:', started ? 'Started successfully - ID: ' + (started.id || 'unknown') : 'Failed or already active');
-          
-          if (started) {
-              // Verify the flow was saved by checking again
-              const verifyFlow = this.db.getActiveFlowForPhone(phone);
-              console.log('Flow verification after start:', verifyFlow ? 'Flow found - ID: ' + verifyFlow.id + ', FlowId: ' + verifyFlow.flowId : 'Flow NOT found!');
-              
-              // Get first step
-              let firstStep;
-              try {
-                firstStep = this.db.getFirstStepOfFlow(flowToStart.id);
-                console.log('First step:', firstStep ? 'Found - ' + firstStep.question.substring(0, 50) : 'Not found');
-              } catch (stepError) {
-                console.error('❌ Error getting first step:', stepError);
-                return false;
-              }
-              
-              if (firstStep) {
-                let welcomeMessage = firstStep.question;
-                
-                // Get options for first step
-                const options = this.db.getStepOptions(firstStep.id);
-                
-                if (options && options.length > 0 && !firstStep.isFormStep) {
-                  // Buttons are deprecated in WhatsApp, use plain text with numbered options
-                  try {
-                    let textMessage = welcomeMessage + '\n\nPlease reply with one of the following:\n';
-                    options.forEach((opt, index) => {
-                      if (opt.optionUrl) {
-                        textMessage += `${index + 1}. ${opt.optionText} (${opt.optionUrl})\n`;
-                      } else {
-                        textMessage += `${index + 1}. ${opt.optionText}\n`;
-                      }
-                    });
-                    await this.client.sendMessage(chatId, textMessage);
-                    console.log('✅ Started automated flow (plain text) for', phone);
-                    return true; // Message sent, handled by automated flow
-                  } catch (sendError) {
-                    console.error('❌ Error sending welcome message:', sendError);
-                    console.error('Error details:', sendError.message);
-                    return false;
-                  }
-                } else {
-                  // No options or form step, send plain text
-                  try {
-                    await this.client.sendMessage(chatId, welcomeMessage);
-                    console.log('✅ Started automated flow for', phone, '- Message sent successfully');
-                    return true; // Message sent, handled by automated flow
-                  } catch (sendError) {
-                    console.error('❌ Error sending welcome message:', sendError);
-                    console.error('Error details:', sendError.message);
-                    console.error('ChatId:', chatId, 'Message length:', welcomeMessage.length);
-                    return false;
-                  }
-                }
-              } else {
-                console.log('⚠️ First step not found for flow ID:', flowToStart.id);
-                return false;
-              }
-            } else {
-              console.log('⚠️ Flow start returned null or false. Flow ID:', flowToStart.id, 'Phone:', phone);
-              return false;
-            }
-          } else {
-            console.log('⚠️ Trigger check failed. Message:', messageBody.substring(0, 50), 'does not match trigger words');
-            return false;
-          }
-        } else {
-          console.log('⚠️ No active flows found. Make sure you have at least one active automated message flow.');
-          return false;
-        }
     } catch (error) {
       console.error('❌ Error processing automated reply:', error);
       console.error('Error message:', error.message);
