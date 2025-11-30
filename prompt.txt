@@ -1,0 +1,305 @@
+🧩 PROJECT REQUIREMENT
+
+Build a WhatsApp Marketing Automation Desktop App using:
+
+Electron.js (main, preload, renderer)
+
+React (CDN version) inside HTML
+
+whatsapp-web.js
+
+SQLite database
+
+CSV upload
+
+Session-based WhatsApp auto-login
+
+Message broadcasting
+
+Random delay
+
+Image/PDF document sending
+
+Campaign dashboard
+
+No Vite / No CRA / No bundler
+
+Everything runs inside one HTML frontend file using React CDN.
+
+🚀 APPLICATION FEATURES
+1. Electron Architecture
+Main Process
+
+Creates BrowserWindow
+
+Injects preload.js
+
+Handles IPC events
+
+Loads index.html
+
+Preload
+
+Exposes secure IPC methods using contextBridge
+
+Renderer (Frontend)
+
+Single HTML file
+
+Uses React + ReactDOM CDN
+
+Uses JSX by Babel
+
+🧲 2. WhatsApp Integration (whatsapp-web.js)
+
+Must include:
+
+QR code generation
+
+Show QR in frontend
+
+Save session in session/session.json
+
+Auto reconnect on startup
+
+Connection statuses:
+
+Waiting for QR
+
+Scanning
+
+Connected
+
+Disconnected
+
+Backend events → send to frontend using IPC.
+
+📤 3. Message Sending Engine
+
+Supports:
+
+Plain text messages
+
+Image/JPG/PNG
+
+PDF
+
+Document files
+
+Per-message delay
+
+Random delay (min/max)
+
+Real-time logs in UI
+
+📥 4. CSV Upload
+
+CSV contains fields:
+
+name, phone, customMessage(optional)
+
+
+Frontend → Preload → Backend → Parse → Store into SQLite → Show preview.
+
+🎨 5. Templates Management (SQLite)
+
+Table:
+
+templates(
+   id INTEGER PRIMARY KEY,
+   title TEXT,
+   body TEXT
+)
+
+
+Frontend:
+
+Create template
+
+Edit template
+
+Delete template
+
+Preview
+
+Variables: {{name}}
+
+📦 6. Campaign Management
+
+SQLite table:
+
+campaigns(
+   id INTEGER PRIMARY KEY,
+   name TEXT,
+   totalContacts INTEGER,
+   sent INTEGER,
+   failed INTEGER,
+   createdAt DATETIME,
+   completedAt DATETIME
+)
+
+
+Features:
+
+Start campaign
+
+Track progress
+
+Live logs
+
+Export report
+
+🔐 7. SQLite Database Tables
+contacts (
+   id INTEGER PRIMARY KEY,
+   name TEXT,
+   phone TEXT,
+   message TEXT,
+   templateId INTEGER,
+   status TEXT,
+   sentAt DATETIME
+)
+
+templates (id, title, body)
+
+campaigns (id, name, totalContacts, sent, failed)
+
+logs (id, campaignId, contactId, status, error, timestamp)
+
+settings (key TEXT PRIMARY KEY, value TEXT)
+
+🧱 8. Frontend (HTML + React CDN)
+
+index.html loads:
+
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+Pages inside React Components:
+
+Connection Screen
+
+QR code generated from backend
+
+Connection status
+
+Reconnect button
+
+Dashboard
+
+Total contacts
+
+Last campaign
+
+WhatsApp connection status
+
+CSV Upload
+
+Upload CSV
+
+Show table
+
+Save to DB
+
+Templates
+
+CRUD
+
+Preview
+
+Send Campaign
+
+Choose template
+
+Choose contacts
+
+Set delay
+
+Set random delay
+
+Start campaign
+
+Show real-time sending logs
+
+Logs
+
+Filter
+
+Search by number
+
+Export
+
+⚙️ 9. IPC Structure
+Preload exposes APIs:
+window.api = {
+  sendMessage: (channel, data) => ipcRenderer.send(channel, data),
+  receiveMessage: (channel, func) => ipcRenderer.on(channel, (event, ...args) => func(...args))
+}
+
+
+Events:
+
+From frontend → backend
+
+"upload-csv"
+
+"get-templates"
+
+"save-template"
+
+"start-campaign"
+
+"send-message"
+
+"whatsapp-connect"
+
+From backend → frontend
+
+"log-update"
+
+"qr-update"
+
+"connection-status"
+
+"campaign-progress"
+
+⏱ 10. Anti-Block Features
+
+Must include:
+
+Random delay sending
+
+5–9 sec delay option
+
+Automatic pause after X messages
+
+Retry failed numbers
+
+Optional alternative messages (spin text)
+
+📄 11. Media Sending
+
+Support:
+
+Select image from system
+
+Select PDF
+
+Convert files → base64 → MessageMedia
+
+Backend sends via whatsapp-web.js
+
+🧪 12. Build System
+
+Electron Build Targets:
+
+Windows EXE
+
+Mac DMG
+
+Linux AppImage
+
+🧩 FINAL SUMMARY FOR CURSOR
+
+“Build an Electron desktop app with HTML + React CDN frontend, using whatsapp-web.js for QR login, persistent session, message broadcasting, CSV upload, media sending, SQLite storage, templates, anti-block random delays, campaign manager, and full IPC communication.”

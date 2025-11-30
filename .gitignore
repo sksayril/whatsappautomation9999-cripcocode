@@ -1,0 +1,37 @@
+# Build outputs
+dist/
+build/
+*.exe
+*.dmg
+*.AppImage
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Database files (optional - uncomment if you don't want to track)
+# *.db
+# *.db-journal
+
+# Session data
+session/
+.wwebjs_auth/
+.wwebjs_cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp

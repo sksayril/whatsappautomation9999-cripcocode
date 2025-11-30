@@ -1,0 +1,118 @@
+{
+  "name": "wapiea",
+  "version": "1.0.0",
+  "description": "Wapiea - WhatsApp Marketing Automation",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "rebuild": "electron-rebuild -f -w better-sqlite3",
+    "postinstall": "electron-rebuild -f -w better-sqlite3",
+    "build": "electron-builder",
+    "clean": "node -e \"const fs=require('fs');const path=require('path');['dist','build'].forEach(d=>{try{fs.rmSync(d,{recursive:true,force:true});console.log('Cleaned:',d)}catch(e){}})\"",
+    "prebuild:win": "npm run clean",
+    "build:win": "electron-builder --win --x64",
+    "build:win:portable": "electron-builder --win portable",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "dist": "npm run build:win",
+    "pack": "electron-builder --dir"
+  },
+  "keywords": [
+    "whatsapp",
+    "automation",
+    "marketing",
+    "electron"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^9.2.2",
+    "csv-parse": "^5.5.3",
+    "debug": "^4.4.3",
+    "extract-zip": "^2.0.1",
+    "puppeteer": "^24.31.0",
+    "puppeteer-core": "^21.11.0",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.23.0"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^3.7.2",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "sharp": "^0.34.5"
+  },
+  "build": {
+    "appId": "com.wapiea.app",
+    "productName": "Wapiea",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "**/*",
+      "!node_modules/**/*",
+      "!dist/**/*",
+      "!build/**/*",
+      "!*.md",
+      "!*.log",
+      "!sample-contacts.csv",
+      "!QUICKSTART.md",
+      "!README.md",
+      "!BUILD_INSTRUCTIONS.md",
+      "!prompt.txt",
+      "!EXTRACT_ZIP_FIX.md",
+      "!PUPPETEER_FIX.md",
+      "!ICON_FIX.md",
+      "!database.db",
+      "!database.db-journal",
+      "!session/**/*",
+      "node_modules/**/*",
+      "backend/**/*",
+      "renderer/**/*",
+      "assets/**/*",
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "asar": false,
+    "asarUnpack": [],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.png",
+      "publisherName": "Cripcocode Technologies Pvt Ltd",
+      "requestedExecutionLevel": "asInvoker",
+      "signAndEditExecutable": false,
+      "asar": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Wapiea",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true,
+      "menuCategory": "Business",
+      "artifactName": "${productName}-${version}-Setup.${ext}",
+      "uninstallDisplayName": "Wapiea - WhatsApp Marketing Automation",
+      "warningsAsErrors": false
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns",
+      "category": "public.app-category.business"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png",
+      "category": "Office"
+    }
+  }
+}
