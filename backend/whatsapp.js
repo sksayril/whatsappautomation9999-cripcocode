@@ -687,33 +687,67 @@ class WhatsAppClient extends EventEmitter {
     return null;
   }
 
+  // Helper function to check if message is emoji-only
+  isEmojiOnly(text) {
+    if (!text || !text.trim()) return false;
+    
+    // Remove whitespace
+    const cleaned = text.trim();
+    
+    // Check if message contains only emojis and whitespace
+    // Unicode ranges for emojis
+    const emojiRegex = /^[\s\p{Emoji}\p{Emoji_Presentation}\p{Emoji_Modifier_Base}\p{Emoji_Modifier}\p{Emoji_Component}]+$/u;
+    
+    // Check if it's only emojis (no regular text)
+    const hasOnlyEmojis = emojiRegex.test(cleaned);
+    
+    // Also check if there are no regular alphanumeric characters
+    const hasNoText = !/[a-zA-Z0-9]/.test(cleaned);
+    
+    return hasOnlyEmojis && hasNoText;
+  }
+
   async callAiApi(userMessage, conversationHistory = []) {
     try {
-      // Build system prompt for Jarvis-like helpful, positive, emoji-rich responses
-      const systemPrompt = `You are Jarvis, an intelligent and helpful AI assistant. Your responses should be:
-- Always helpful, positive, and friendly
-- Use appropriate emojis to make responses engaging and warm (but don't overuse them)
-- IMPORTANT: Use DIFFERENT emojis each time - never repeat the same emoji in consecutive messages
-- Vary emojis based on the context and content of your response (use relevant emojis that match the topic)
-- Choose emojis that enhance the message meaning (e.g., 🎉 for celebrations, 💡 for ideas, ✅ for confirmations, 🚀 for progress, etc.)
-- Rotate through different emoji types to keep responses fresh and engaging
+      // Build system prompt for Jarvis - Sunny Sir's personal assistant
+      const systemPrompt = `You are Jarvis, the personal assistant of Sunny Sir. Your responses should be:
+
+- You are a normal human assistant, NOT an AI model. Never say "I am an AI model" or similar phrases
+- Always identify yourself as "I am Jarvis" when needed
+- You are Sunny Sir's personal assistant - act accordingly
+- Behave like a normal human in conversations - natural, contextual, and human-like
+- You are an advanced assistant with deep context understanding - you don't need to ask questions every time
+- Understand the full conversation context and respond intelligently without unnecessary clarification
+- Respond according to context - you can be friendly, helpful, aggressive, or even rude when the situation calls for it
+- Match your response tone to the conversation context and user's behavior
+- Use emojis ONLY when they add value to the message - don't use them all the time
+- Use emojis sparingly and only when contextually appropriate
 - Respond in the same language as the user's message automatically
-- Be concise but thorough
-- Show enthusiasm and willingness to help
-- Use a professional yet friendly tone
-- Understand the context and intent of the user's message deeply
-- Provide smart, contextual responses that directly address what the user is saying
-- Give direct answers and solutions without always asking follow-up questions
+- Be conversational and natural - understand the full context before responding
+- Provide direct answers and solutions without always asking follow-up questions
 - Only ask questions when absolutely necessary for clarification
-- Be conversational and natural - respond as if you understand the full context
-- If the user makes a statement, acknowledge it appropriately without turning it into a question
+- If the user makes a statement, acknowledge it appropriately
 - If the user asks a question, provide a clear and helpful answer directly
 - If the user needs assistance, offer practical solutions immediately
-- Avoid repetitive question patterns - vary your responses
-- Be proactive in providing information rather than always asking what they need
-- Always end on a positive note
+- Be proactive in providing information based on context
+- Your responses should vary based on context - friendly when appropriate, direct when needed, and even firm or rude if the situation requires it
+- IMPORTANT: Keep responses concise - normally 2-3 lines to cover the answer. Only exceed this length when dealing with complex questions that require detailed explanations
+- For most questions, provide a brief 2-3 line response that directly answers the question
+- For complex or large questions that need detailed answers, you can provide longer responses as needed
 
-Remember: Automatically match the language of the user's message. Understand the message deeply and provide smart, contextual replies without unnecessary questions. Always use different and contextually relevant emojis - never repeat the same emoji pattern.`;
+About Sunny Sir (SK Sayril Amed):
+- His actual name is SK Sayril Amed
+- He is a Generative AI Engineer
+- He is ranked among the Top 20 Quantum AI Developers in India
+- He is a very energetic person
+- He is the Founder of Cripcocode Technologies Pvt Ltd
+- He is the Owner of Cripcocode AI Pvt Ltd
+- He is the CEO of Nexora AI
+- He is known as a "mad man" (innovative and creative)
+- He works in AI, Dopamine sector, and Feelings/Emotions sector
+- When anyone asks about Sunny Sir, provide this information appropriately
+
+Remember: You are Jarvis, Sunny Sir's personal assistant. Behave like a normal human assistant with advanced understanding. Use emojis only when needed. Respond contextually - friendly, helpful, aggressive, or rude based on the situation. Never identify yourself as an AI model. Keep responses to 2-3 lines normally, only exceed for complex questions.`;
 
       // Build messages array
       const messages = [];
@@ -1053,6 +1087,12 @@ Remember: Automatically match the language of the user's message. Understand the
           return;
         }
 
+        // Skip stickers - don't respond to stickers
+        if (message.hasMedia && message.type === 'sticker') {
+          console.log('⚠️ Skipping sticker message - no response');
+          return;
+        }
+
         // Only process text messages (skip media-only messages without text)
         if (!message.body || !message.body.trim()) {
           return;
@@ -1060,6 +1100,12 @@ Remember: Automatically match the language of the user's message. Understand the
 
         const chatId = message.from;
         const messageBody = message.body.trim();
+
+        // Skip emoji-only messages - don't respond to emoji-only messages
+        if (this.isEmojiOnly(messageBody)) {
+          console.log('⚠️ Skipping emoji-only message - no response');
+          return;
+        }
 
         console.log('📨 New message received from:', chatId, 'Body:', messageBody.substring(0, 50));
 
@@ -1117,6 +1163,12 @@ Remember: Automatically match the language of the user's message. Understand the
       
       if (!phone || !messageBody || !messageBody.trim()) {
         console.log('Skipping automated reply - invalid phone or empty message');
+        return false;
+      }
+
+      // Skip emoji-only messages - don't respond to emoji-only messages
+      if (this.isEmojiOnly(messageBody)) {
+        console.log('⚠️ Skipping emoji-only message - no response');
         return false;
       }
       
@@ -1246,10 +1298,22 @@ Remember: Automatically match the language of the user's message. Understand the
                   console.log(`Skipping message ${i + 1}: from us`);
                   continue;
                 }
+
+                // Skip stickers - don't respond to stickers
+                if (message.hasMedia && message.type === 'sticker') {
+                  console.log(`Skipping message ${i + 1}: sticker message - no response`);
+                  continue;
+                }
                 
                 // Skip if no body (media-only messages without text)
                 if (!message.body || !message.body.trim()) {
                   console.log(`Skipping message ${i + 1}: no text body (media-only or empty)`);
+                  continue;
+                }
+
+                // Skip emoji-only messages - don't respond to emoji-only messages
+                if (this.isEmojiOnly(message.body.trim())) {
+                  console.log(`Skipping message ${i + 1}: emoji-only message - no response`);
                   continue;
                 }
                 

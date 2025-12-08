@@ -8,13 +8,13 @@
     "rebuild": "electron-rebuild -f -w better-sqlite3",
     "postinstall": "electron-rebuild -f -w better-sqlite3",
     "build": "electron-builder",
-    "clean": "node -e \"const fs=require('fs');const path=require('path');['dist','build'].forEach(d=>{try{fs.rmSync(d,{recursive:true,force:true});console.log('Cleaned:',d)}catch(e){}})\"",
+    "clean": "node -e \"const fs=require('fs');const path=require('path');['dist','build'].forEach(d=>{try{fs.rmSync(d,{recursive:true,force:true});console.log('✅ Cleaned:',d)}catch(e){console.log('⚠️ Could not clean:',d,e.message)}});console.log('✨ Clean completed!')\"",
     "prebuild:win": "npm run clean",
     "build:win": "electron-builder --win --x64",
     "build:win:portable": "electron-builder --win portable",
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux",
-    "dist": "npm run build:win",
+    "dist": "npm run clean && npm run build:win",
     "pack": "electron-builder --dir"
   },
   "keywords": [
