@@ -60,14 +60,14 @@ body {
 .app-container {
     min-height: 100vh;
     display: flex;
-    gap: 24px;
-    padding: 24px;
-    max-width: 1800px;
+    gap: 12px;
+    padding: 12px;
+    max-width: 100%;
     margin: 0 auto;
 }
 
 .app-sidebar {
-    width: 280px;
+    width: 220px;
     flex-shrink: 0;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px) saturate(180%);
@@ -75,12 +75,12 @@ body {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--glass-border);
-    padding: 24px 0;
+    padding: 12px 0;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 48px);
+    height: calc(100vh - 24px);
     position: sticky;
-    top: 24px;
+    top: 12px;
     overflow-y: auto;
 }
 
@@ -105,14 +105,14 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 12px;
     min-width: 0;
 }
 
 .sidebar-header {
-    padding: 0 24px 24px 24px;
+    padding: 0 16px 12px 16px;
     border-bottom: 2px solid rgba(0, 191, 255, 0.1);
-    margin-bottom: 24px;
+    margin-bottom: 12px;
 }
 
 .sidebar-logo {
@@ -123,15 +123,15 @@ body {
 }
 
 .sidebar-logo-icon {
-    width: 48px;
-    height: 48px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #10b981 0%, #00BFFF 100%);
-    border-radius: 12px;
-    padding: 8px;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    border-radius: 8px;
+    padding: 6px;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
     transition: all 0.3s ease;
 }
 
@@ -147,7 +147,7 @@ body {
 }
 
 .sidebar-title {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 800;
     background: var(--primary-gradient);
     -webkit-background-clip: text;
@@ -157,12 +157,12 @@ body {
 }
 
 .sidebar-status {
-    font-size: 12px;
-    padding: 6px 12px;
-    border-radius: 20px;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 12px;
     display: inline-block;
     font-weight: 600;
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
 .sidebar-nav {
@@ -173,15 +173,15 @@ body {
 .sidebar-nav-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 20px;
-    margin-bottom: 8px;
-    border-radius: 12px;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     color: var(--text-secondary);
     font-weight: 600;
-    font-size: 15px;
+    font-size: 12px;
     border: 2px solid transparent;
     position: relative;
     overflow: hidden;
@@ -224,8 +224,8 @@ body {
 }
 
 .sidebar-nav-item-icon {
-    font-size: 20px;
-    width: 24px;
+    font-size: 16px;
+    width: 18px;
     text-align: center;
     display: flex;
     align-items: center;
@@ -237,23 +237,23 @@ body {
 }
 
 .sidebar-footer {
-    padding: 24px;
+    padding: 12px 16px;
     border-top: 2px solid rgba(0, 191, 255, 0.1);
     margin-top: auto;
 }
 
 .sidebar-footer-text {
-    font-size: 11px;
+    font-size: 9px;
     color: var(--text-secondary);
     text-align: center;
-    line-height: 1.6;
+    line-height: 1.4;
 }
 
 .header {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    padding: 24px 32px;
+    padding: 12px 16px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-lg);
     display: flex;
@@ -273,12 +273,12 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-size: 32px;
+    font-size: 20px;
     font-weight: 800;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.3px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
 }
 
 /* Legacy nav-tabs - kept for backward compatibility if needed */
@@ -290,12 +290,13 @@ body {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    padding: 40px;
+    padding: 16px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-lg);
-    min-height: 600px;
+    min-height: calc(100vh - 120px);
     border: 1px solid var(--glass-border);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow-y: auto;
 }
 
 .content-panel:hover {
@@ -305,9 +306,9 @@ body {
 .card {
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
-    padding: 28px;
+    padding: 16px;
     border-radius: var(--border-radius-sm);
-    margin-bottom: 24px;
+    margin-bottom: 12px;
     box-shadow: var(--shadow-md);
     border: 1px solid rgba(255, 255, 255, 0.5);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -338,20 +339,20 @@ body {
 }
 
 .btn {
-    padding: 14px 28px;
+    padding: 8px 16px;
     border: none;
-    border-radius: 12px;
-    font-size: 15px;
+    border-radius: 8px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
     position: relative;
     overflow: hidden;
     box-shadow: var(--shadow-sm);
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
 }
 
 .btn::before {
@@ -377,9 +378,9 @@ body {
 }
 
 .btn-sm {
-    padding: 6px 14px;
-    font-size: 13px;
-    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 6px;
     font-weight: 500;
 }
 
@@ -438,26 +439,26 @@ body {
 }
 
 .input-group {
-    margin-bottom: 24px;
+    margin-bottom: 12px;
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     font-weight: 600;
     color: var(--text-primary);
-    font-size: 15px;
-    letter-spacing: 0.2px;
+    font-size: 12px;
+    letter-spacing: 0.1px;
 }
 
 .input-group input,
 .input-group textarea,
 .input-group select {
     width: 100%;
-    padding: 14px 18px;
+    padding: 8px 12px;
     border: 2px solid #e5e7eb;
-    border-radius: 12px;
-    font-size: 15px;
+    border-radius: 8px;
+    font-size: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: rgba(255, 255, 255, 0.9);
     font-family: inherit;
@@ -482,10 +483,10 @@ body {
 /* Form Control Styles */
 .form-control {
     width: 100%;
-    padding: 12px 16px;
+    padding: 8px 12px;
     border: 2px solid #e5e7eb;
-    border-radius: 10px;
-    font-size: 14px;
+    border-radius: 8px;
+    font-size: 12px;
     font-family: inherit;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: #ffffff;
@@ -524,11 +525,11 @@ input[type="url"].form-control {
 .status-badge {
     display: inline-flex;
     align-items: center;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 10px;
     font-weight: 600;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
     box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
 }
@@ -607,9 +608,10 @@ table {
 }
 
 th, td {
-    padding: 16px 20px;
+    padding: 8px 12px;
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
+    font-size: 11px;
 }
 
 th {
@@ -617,8 +619,8 @@ th {
     font-weight: 700;
     color: var(--text-primary);
     text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 0.5px;
+    font-size: 10px;
+    letter-spacing: 0.3px;
 }
 
 tbody tr {
@@ -638,15 +640,15 @@ tbody tr:last-child td {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 24px;
-    margin-bottom: 32px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
 }
 
 .stat-card {
     background: var(--primary-gradient);
     color: white;
-    padding: 32px;
+    padding: 16px;
     border-radius: var(--border-radius-sm);
     box-shadow: var(--shadow-md);
     position: relative;
@@ -677,18 +679,18 @@ tbody tr:last-child td {
 }
 
 .stat-card h3 {
-    font-size: 14px;
+    font-size: 10px;
     opacity: 0.95;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     text-transform: uppercase;
     position: relative;
     z-index: 1;
 }
 
 .stat-card .value {
-    font-size: 42px;
+    font-size: 28px;
     font-weight: 800;
     line-height: 1;
     position: relative;
@@ -780,7 +782,7 @@ tbody tr:last-child td {
 .modal {
     background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(20px);
-    padding: 40px;
+    padding: 20px;
     border-radius: var(--border-radius);
     max-width: 600px;
     width: 90%;
@@ -807,7 +809,7 @@ tbody tr:last-child td {
 }
 
 .modal-header {
-    padding: 20px 28px;
+    padding: 12px 16px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
@@ -817,7 +819,7 @@ tbody tr:last-child td {
 
 .modal-header h3 {
     margin: 0;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--text-primary);
     background: var(--primary-gradient);
@@ -850,7 +852,7 @@ tbody tr:last-child td {
 }
 
 .modal-body {
-    padding: 24px 28px;
+    padding: 16px;
     overflow-y: auto;
     flex: 1;
 }
@@ -870,11 +872,11 @@ tbody tr:last-child td {
 }
 
 .modal-footer {
-    padding: 16px 28px;
+    padding: 12px 16px;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 8px;
     background: rgba(249, 250, 251, 0.5);
 }
 
@@ -1077,32 +1079,33 @@ tbody tr:last-child td {
 
 .empty-state {
     text-align: center;
-    padding: 80px 20px;
+    padding: 40px 16px;
     color: var(--text-secondary);
 }
 
 .empty-state svg {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 24px;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 16px;
     opacity: 0.4;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .empty-state p {
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 500;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .log-item {
-    padding: 16px 20px;
-    margin-bottom: 12px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
     border-radius: var(--border-radius-sm);
     background: rgba(249, 250, 251, 0.8);
-    border-left: 4px solid #00BFFF;
+    border-left: 3px solid #00BFFF;
     transition: all 0.3s ease;
     box-shadow: var(--shadow-sm);
+    font-size: 11px;
 }
 
 .log-item:hover {

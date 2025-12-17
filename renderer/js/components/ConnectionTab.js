@@ -14,8 +14,8 @@ function ConnectionTab({ qrCode, connectionStatus, connectionData }) {
                 try {
                     new QRCode(qrContainerRef.current, {
                         text: qrCode,
-                        width: 300,
-                        height: 300,
+                        width: 240,
+                        height: 240,
                         colorDark: '#000000',
                         colorLight: '#ffffff',
                         correctLevel: QRCode.CorrectLevel.H
@@ -104,14 +104,14 @@ function ConnectionTab({ qrCode, connectionStatus, connectionData }) {
     return (
         <div>
             <h2 style={{ 
-                marginBottom: '28px', 
+                marginBottom: '16px', 
                 background: 'var(--primary-gradient)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
-                fontSize: '28px',
+                fontSize: '18px',
                 fontWeight: '800',
-                letterSpacing: '-0.5px'
+                letterSpacing: '-0.3px'
             }}>🔗 WhatsApp Connection</h2>
             
             {/* Loading/Connecting State */}
@@ -131,7 +131,7 @@ function ConnectionTab({ qrCode, connectionStatus, connectionData }) {
                         ) : (
                             <div className="loading" style={{ marginRight: '16px', width: '24px', height: '24px' }}></div>
                         )}
-                        <h3 style={{ margin: 0, color: connectionStatus === 'authenticated' ? '#10b981' : '#00BFFF', fontSize: '20px', fontWeight: '700' }}>
+                        <h3 style={{ margin: 0, color: connectionStatus === 'authenticated' ? '#10b981' : '#00BFFF', fontSize: '14px', fontWeight: '700' }}>
                             {connectionStatus === 'authenticated' ? '🔐 Authentication Successful! Finalizing connection...' : 
                              qrCode ? '📱 Waiting for QR Scan...' : 
                              '⚡ Connecting to WhatsApp...'}
@@ -194,11 +194,11 @@ function ConnectionTab({ qrCode, connectionStatus, connectionData }) {
             {qrCode && connectionStatus !== 'connected' && (
                 <div className="qr-container">
                     <h3 style={{ 
-                        marginBottom: '24px', 
+                        marginBottom: '16px', 
                         color: '#00BFFF',
-                        fontSize: '22px',
+                        fontSize: '14px',
                         fontWeight: '700',
-                        letterSpacing: '-0.3px'
+                        letterSpacing: '-0.2px'
                     }}>📱 Scan QR Code with WhatsApp</h3>
                     <div ref={qrContainerRef} style={{ display: 'inline-block', margin: '20px 0', padding: '15px', background: 'white', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}></div>
                     <div style={{ 
@@ -239,7 +239,7 @@ function ConnectionTab({ qrCode, connectionStatus, connectionData }) {
                 }}>
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                         <span style={{ fontSize: '32px', marginRight: '12px' }}>✅</span>
-                        <h3 style={{ color: '#10b981', margin: 0, fontSize: '24px', fontWeight: '800' }}>Successfully Connected!</h3>
+                        <h3 style={{ color: '#10b981', margin: 0, fontSize: '16px', fontWeight: '800' }}>Successfully Connected!</h3>
                     </div>
                     <p style={{ color: '#065f46', margin: 0, marginBottom: '10px' }}>
                         Your WhatsApp is connected and ready to send messages.

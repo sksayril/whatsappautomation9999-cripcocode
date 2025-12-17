@@ -50,10 +50,10 @@ function LoginTab({ onLogin }) {
                 background: 'rgba(255, 255, 255, 0.95)',
                 backdropFilter: 'blur(20px) saturate(180%)',
                 WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-                borderRadius: '24px',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.16)',
+                borderRadius: '16px',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.12)',
                 border: '1px solid rgba(255, 255, 255, 0.18)',
-                padding: '40px',
+                padding: '24px',
                 animation: 'fadeInUp 0.5s ease'
             }}>
                 {/* Logo */}
@@ -65,7 +65,7 @@ function LoginTab({ onLogin }) {
                         display: 'inline-block',
                         marginBottom: '16px'
                     }}>
-                        <svg viewBox="0 0 100 100" style={{width: '80px', height: '80px'}} xmlns="http://www.w3.org/2000/svg">
+                        <svg viewBox="0 0 100 100" style={{width: '60px', height: '60px'}} xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <linearGradient id="loginLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stopColor="#10b981" stopOpacity="1" />
@@ -92,18 +92,18 @@ function LoginTab({ onLogin }) {
                         </svg>
                     </div>
                     <h1 style={{
-                        fontSize: '32px',
+                        fontSize: '24px',
                         fontWeight: '700',
                         background: 'linear-gradient(135deg, #10b981 0%, #00BFFF 100%)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
-                        marginBottom: '8px'
+                        marginBottom: '6px'
                     }}>
                         Wapiea
                     </h1>
                     <p style={{
                         color: '#6b7280',
-                        fontSize: '14px',
+                        fontSize: '12px',
                         fontWeight: '500'
                     }}>
                         WhatsApp Marketing Automation

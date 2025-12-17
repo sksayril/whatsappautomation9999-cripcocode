@@ -126,19 +126,19 @@ function CampaignTab({ templates, contacts, onReload, progress }) {
     return (
         <div>
             <h2 style={{ 
-                marginBottom: '28px',
+                marginBottom: '16px',
                 background: 'var(--primary-gradient)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
-                fontSize: '28px',
+                fontSize: '18px',
                 fontWeight: '800',
-                letterSpacing: '-0.5px'
+                letterSpacing: '-0.3px'
             }}>🚀 Create Campaign</h2>
 
             {progress && (
-                <div className="card" style={{ marginBottom: '20px', background: '#f0fdf4' }}>
-                    <h3 style={{ marginBottom: '10px' }}>Campaign Progress</h3>
+                <div className="card" style={{ marginBottom: '12px', background: '#f0fdf4' }}>
+                    <h3 style={{ marginBottom: '8px', fontSize: '14px' }}>Campaign Progress</h3>
                     <div className="progress-bar">
                         <div className="progress-fill" style={{ width: `${(progress.current / progress.total) * 100}%` }}></div>
                     </div>
@@ -326,7 +326,7 @@ function CampaignTab({ templates, contacts, onReload, progress }) {
                     borderRadius: '12px',
                     border: '2px solid rgba(59, 130, 246, 0.2)'
                 }}>
-                    <h3 style={{ marginBottom: '16px', color: '#00BFFF', fontSize: '18px', fontWeight: '700' }}>
+                    <h3 style={{ marginBottom: '12px', color: '#00BFFF', fontSize: '14px', fontWeight: '700' }}>
                         📊 Message Limits
                     </h3>
                     
@@ -344,7 +344,7 @@ function CampaignTab({ templates, contacts, onReload, progress }) {
                             placeholder="1000"
                             disabled={isCreating}
                         />
-                        <p style={{ marginTop: '8px', fontSize: '12px', color: '#6b7280' }}>
+                        <p style={{ marginTop: '6px', fontSize: '10px', color: '#6b7280' }}>
                             Maximum messages that can be sent in 24 hours for this campaign
                         </p>
                     </div>
@@ -363,7 +363,7 @@ function CampaignTab({ templates, contacts, onReload, progress }) {
                             placeholder="1000"
                             disabled={isCreating}
                         />
-                        <p style={{ marginTop: '8px', fontSize: '12px', color: '#6b7280' }}>
+                        <p style={{ marginTop: '6px', fontSize: '10px', color: '#6b7280' }}>
                             Maximum total messages for this campaign (campaign will stop when reached)
                         </p>
                     </div>
@@ -379,10 +379,10 @@ function CampaignTab({ templates, contacts, onReload, progress }) {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                             <div className="loading" style={{ width: '20px', height: '20px' }}></div>
                             <div>
-                                <p style={{ margin: 0, color: '#00BFFF', fontWeight: '700', fontSize: '16px' }}>
+                                <p style={{ margin: 0, color: '#00BFFF', fontWeight: '700', fontSize: '12px' }}>
                                     {createdCampaignId ? '✅ Campaign Created! Starting...' : '⏳ Creating Campaign...'}
                                 </p>
-                                <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '13px' }}>
+                                <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '10px' }}>
                                     Please wait while we create and start your campaign
                                 </p>
                             </div>

@@ -19,9 +19,9 @@ function LogsTab({ logs, onReload }) {
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
-                    fontSize: '28px',
+                    fontSize: '18px',
                     fontWeight: '800',
-                    letterSpacing: '-0.5px',
+                    letterSpacing: '-0.3px',
                     margin: 0
                 }}>📋 Logs</h2>
                 <div style={{ display: 'flex', gap: '10px' }}>

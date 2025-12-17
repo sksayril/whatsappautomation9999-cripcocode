@@ -1071,7 +1071,7 @@ function ChatsTab({ connectionStatus }) {
                         color: 'white',
                         marginBottom: 0
                     }}>
-                        <h3 style={{ margin: 0, fontSize: '20px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <h3 style={{ margin: 0, fontSize: '14px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <span>💬</span>
                             <span>All Chats ({filteredChats.length})</span>
                         </h3>
@@ -1281,7 +1281,7 @@ function ChatsTab({ connectionStatus }) {
             {/* Contacts View */}
             {!loading && activeView === 'contacts' && (
                 <div className="card">
-                    <h3 style={{ marginBottom: '20px', color: '#00BFFF', fontSize: '20px', fontWeight: '700' }}>
+                    <h3 style={{ marginBottom: '12px', color: '#00BFFF', fontSize: '14px', fontWeight: '700' }}>
                         👥 All Contacts ({filteredContacts.length})
                     </h3>
                     {filteredContacts.length === 0 ? (

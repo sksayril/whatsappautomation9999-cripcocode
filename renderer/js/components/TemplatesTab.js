@@ -115,9 +115,9 @@ function TemplatesTab({ templates, onReload }) {
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
-                    fontSize: '28px',
+                    fontSize: '18px',
                     fontWeight: '800',
-                    letterSpacing: '-0.5px',
+                    letterSpacing: '-0.3px',
                     margin: 0
                 }}>📝 Templates</h2>
                 <button className="btn btn-primary" onClick={handleNew}>
@@ -130,24 +130,24 @@ function TemplatesTab({ templates, onReload }) {
                     <p>No templates found. Create your first template!</p>
                 </div>
             ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '12px' }}>
                     {templates.map(template => (
                         <div className="card" key={template.id} style={{
                             background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(249, 250, 251, 0.95) 100%)',
                             border: '2px solid rgba(102, 126, 234, 0.1)'
                         }}>
                             <h3 style={{ 
-                                marginBottom: '16px', 
+                                marginBottom: '10px', 
                                 color: '#00BFFF',
-                                fontSize: '20px',
+                                fontSize: '14px',
                                 fontWeight: '700'
                             }}>{template.title}</h3>
                             <div style={{ 
                                 color: '#6b7280', 
-                                marginBottom: '20px', 
+                                marginBottom: '12px', 
                                 whiteSpace: 'pre-wrap',
-                                lineHeight: '1.8',
-                                fontSize: '15px'
+                                lineHeight: '1.6',
+                                fontSize: '11px'
                             }}>
                                 {template.body.split('\n').map((line, idx) => {
                                     // Simple formatting renderer
@@ -221,11 +221,11 @@ function TemplatesTab({ templates, onReload }) {
                                     );
                                 })}
                             </div>
-                            <div style={{ display: 'flex', gap: '12px' }}>
-                                <button className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '14px', flex: 1 }} onClick={() => handleEdit(template)}>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                                <button className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '11px', flex: 1 }} onClick={() => handleEdit(template)}>
                                     ✏️ Edit
                                 </button>
-                                <button className="btn btn-danger" style={{ padding: '10px 20px', fontSize: '14px', flex: 1 }} onClick={() => handleDelete(template.id)}>
+                                <button className="btn btn-danger" style={{ padding: '6px 12px', fontSize: '11px', flex: 1 }} onClick={() => handleDelete(template.id)}>
                                     🗑️ Delete
                                 </button>
                             </div>
@@ -237,7 +237,7 @@ function TemplatesTab({ templates, onReload }) {
             {showModal && (
                 <div className="modal-overlay" onClick={() => setShowModal(false)}>
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
-                        <h2 style={{ marginBottom: '20px', color: '#00BFFF' }}>
+                        <h2 style={{ marginBottom: '12px', color: '#00BFFF', fontSize: '16px' }}>
                             {editingTemplate ? 'Edit Template' : 'New Template'}
                         </h2>
                         <div className="input-group">

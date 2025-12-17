@@ -143,22 +143,22 @@ function DashboardTab({ stats, campaigns, onReload }) {
                         position: 'top',
                         labels: {
                             font: {
-                                size: 14,
+                                size: 11,
                                 weight: '600'
                             },
-                            padding: 20
+                            padding: 12
                         }
                     },
                     title: {
                         display: true,
                         text: 'Successfully Sent Messages (Last 7 Days)',
                         font: {
-                            size: 18,
+                            size: 14,
                             weight: '700'
                         },
                         padding: {
-                            top: 10,
-                            bottom: 30
+                            top: 8,
+                            bottom: 16
                         },
                         color: '#1a1a2e'
                     },
@@ -185,7 +185,7 @@ function DashboardTab({ stats, campaigns, onReload }) {
                         ticks: {
                             stepSize: 1,
                             font: {
-                                size: 12
+                                size: 10
                             },
                             color: '#6b7280'
                         },
@@ -196,7 +196,7 @@ function DashboardTab({ stats, campaigns, onReload }) {
                             display: true,
                             text: 'Number of Messages',
                             font: {
-                                size: 13,
+                                size: 11,
                                 weight: '600'
                             },
                             color: '#6b7280'
@@ -205,7 +205,7 @@ function DashboardTab({ stats, campaigns, onReload }) {
                     x: {
                         ticks: {
                             font: {
-                                size: 12
+                                size: 10
                             },
                             color: '#6b7280'
                         },
@@ -216,7 +216,7 @@ function DashboardTab({ stats, campaigns, onReload }) {
                             display: true,
                             text: 'Date',
                             font: {
-                                size: 13,
+                                size: 11,
                                 weight: '600'
                             },
                             color: '#6b7280'
@@ -272,14 +272,14 @@ function DashboardTab({ stats, campaigns, onReload }) {
     return (
         <div>
             <h2 style={{ 
-                marginBottom: '28px',
+                marginBottom: '16px',
                 background: 'var(--primary-gradient)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
-                fontSize: '28px',
+                fontSize: '18px',
                 fontWeight: '800',
-                letterSpacing: '-0.5px'
+                letterSpacing: '-0.3px'
             }}>📊 Dashboard</h2>
             
             <div className="stats-grid">
@@ -304,40 +304,40 @@ function DashboardTab({ stats, campaigns, onReload }) {
             {/* Success Rate Summary */}
             {chartData.successRate && (
                 <div className="card" style={{ 
-                    marginBottom: '24px',
+                    marginBottom: '12px',
                     background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%)',
                     border: '2px solid rgba(16, 185, 129, 0.2)'
                 }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
                         <div style={{ textAlign: 'center' }}>
-                            <p style={{ color: '#6b7280', fontSize: '14px', fontWeight: '600', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            <p style={{ color: '#6b7280', fontSize: '10px', fontWeight: '600', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
                                 Successfully Sent
                             </p>
-                            <p style={{ color: '#10b981', fontSize: '32px', fontWeight: '800', margin: 0 }}>
+                            <p style={{ color: '#10b981', fontSize: '22px', fontWeight: '800', margin: 0 }}>
                                 {chartData.successRate.sent || 0}
                             </p>
                         </div>
                         <div style={{ textAlign: 'center' }}>
-                            <p style={{ color: '#6b7280', fontSize: '14px', fontWeight: '600', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            <p style={{ color: '#6b7280', fontSize: '10px', fontWeight: '600', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
                                 Failed
                             </p>
-                            <p style={{ color: '#ef4444', fontSize: '32px', fontWeight: '800', margin: 0 }}>
+                            <p style={{ color: '#ef4444', fontSize: '22px', fontWeight: '800', margin: 0 }}>
                                 {chartData.successRate.failed || 0}
                             </p>
                         </div>
                         <div style={{ textAlign: 'center' }}>
-                            <p style={{ color: '#6b7280', fontSize: '14px', fontWeight: '600', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            <p style={{ color: '#6b7280', fontSize: '10px', fontWeight: '600', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
                                 Pending
                             </p>
-                            <p style={{ color: '#f59e0b', fontSize: '32px', fontWeight: '800', margin: 0 }}>
+                            <p style={{ color: '#f59e0b', fontSize: '22px', fontWeight: '800', margin: 0 }}>
                                 {chartData.successRate.pending || 0}
                             </p>
                         </div>
                         <div style={{ textAlign: 'center' }}>
-                            <p style={{ color: '#6b7280', fontSize: '14px', fontWeight: '600', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            <p style={{ color: '#6b7280', fontSize: '10px', fontWeight: '600', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
                                 Success Rate
                             </p>
-                            <p style={{ color: '#00BFFF', fontSize: '32px', fontWeight: '800', margin: 0 }}>
+                            <p style={{ color: '#00BFFF', fontSize: '22px', fontWeight: '800', margin: 0 }}>
                                 {chartData.successRate.successRate || 0}%
                             </p>
                         </div>
@@ -346,8 +346,8 @@ function DashboardTab({ stats, campaigns, onReload }) {
             )}
 
             {/* Messages Sent Chart */}
-            <div className="card" style={{ marginBottom: '24px' }}>
-                <div style={{ height: '400px', position: 'relative', width: '100%' }}>
+            <div className="card" style={{ marginBottom: '12px' }}>
+                <div style={{ height: '250px', position: 'relative', width: '100%' }}>
                     {typeof Chart === 'undefined' && typeof window !== 'undefined' && !window.Chart ? (
                         <div style={{ 
                             display: 'flex', 
@@ -373,27 +373,27 @@ function DashboardTab({ stats, campaigns, onReload }) {
                     background: 'linear-gradient(135deg, rgba(0, 191, 255, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%)',
                     border: '2px solid rgba(0, 191, 255, 0.2)'
                 }}>
-                    <h3 style={{ marginBottom: '20px', color: '#00BFFF', fontSize: '20px', fontWeight: '700' }}>📊 Last Campaign</h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+                    <h3 style={{ marginBottom: '12px', color: '#00BFFF', fontSize: '14px', fontWeight: '700' }}>📊 Last Campaign</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
                         <div>
-                            <p style={{ color: '#6b7280', fontSize: '13px', fontWeight: '600', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Name</p>
-                            <p style={{ color: '#1a1a2e', fontSize: '16px', fontWeight: '700', margin: 0 }}>{stats.lastCampaign.name}</p>
+                            <p style={{ color: '#6b7280', fontSize: '9px', fontWeight: '600', marginBottom: '3px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Name</p>
+                            <p style={{ color: '#1a1a2e', fontSize: '12px', fontWeight: '700', margin: 0 }}>{stats.lastCampaign.name}</p>
                         </div>
                         <div>
-                            <p style={{ color: '#6b7280', fontSize: '13px', fontWeight: '600', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total</p>
-                            <p style={{ color: '#1a1a2e', fontSize: '16px', fontWeight: '700', margin: 0 }}>{stats.lastCampaign.totalContacts}</p>
+                            <p style={{ color: '#6b7280', fontSize: '9px', fontWeight: '600', marginBottom: '3px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Total</p>
+                            <p style={{ color: '#1a1a2e', fontSize: '12px', fontWeight: '700', margin: 0 }}>{stats.lastCampaign.totalContacts}</p>
                         </div>
                         <div>
-                            <p style={{ color: '#6b7280', fontSize: '13px', fontWeight: '600', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Sent</p>
-                            <p style={{ color: '#10b981', fontSize: '16px', fontWeight: '700', margin: 0 }}>{stats.lastCampaign.sent}</p>
+                            <p style={{ color: '#6b7280', fontSize: '9px', fontWeight: '600', marginBottom: '3px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Sent</p>
+                            <p style={{ color: '#10b981', fontSize: '12px', fontWeight: '700', margin: 0 }}>{stats.lastCampaign.sent}</p>
                         </div>
                         <div>
-                            <p style={{ color: '#6b7280', fontSize: '13px', fontWeight: '600', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Failed</p>
-                            <p style={{ color: '#ef4444', fontSize: '16px', fontWeight: '700', margin: 0 }}>{stats.lastCampaign.failed}</p>
+                            <p style={{ color: '#6b7280', fontSize: '9px', fontWeight: '600', marginBottom: '3px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Failed</p>
+                            <p style={{ color: '#ef4444', fontSize: '12px', fontWeight: '700', margin: 0 }}>{stats.lastCampaign.failed}</p>
                         </div>
                         <div>
-                            <p style={{ color: '#6b7280', fontSize: '13px', fontWeight: '600', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Created</p>
-                            <p style={{ color: '#1a1a2e', fontSize: '16px', fontWeight: '700', margin: 0 }}>{new Date(stats.lastCampaign.createdAt).toLocaleString()}</p>
+                            <p style={{ color: '#6b7280', fontSize: '9px', fontWeight: '600', marginBottom: '3px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Created</p>
+                            <p style={{ color: '#1a1a2e', fontSize: '11px', fontWeight: '700', margin: 0 }}>{new Date(stats.lastCampaign.createdAt).toLocaleString()}</p>
                         </div>
                     </div>
                 </div>
@@ -401,7 +401,7 @@ function DashboardTab({ stats, campaigns, onReload }) {
 
             {campaigns.length > 0 && (
                 <div className="card">
-                    <h3 style={{ marginBottom: '20px', color: '#00BFFF', fontSize: '20px', fontWeight: '700' }}>📈 Recent Campaigns</h3>
+                    <h3 style={{ marginBottom: '12px', color: '#00BFFF', fontSize: '14px', fontWeight: '700' }}>📈 Recent Campaigns</h3>
                     <div className="table-container">
                         <table>
                             <thead>
@@ -429,7 +429,7 @@ function DashboardTab({ stats, campaigns, onReload }) {
                                         <td>{campaign.totalContacts}</td>
                                             <td style={{ color: '#10b981', fontWeight: '600' }}>{campaign.sent || 0}</td>
                                             <td style={{ color: '#ef4444', fontWeight: '600' }}>{campaign.failed || 0}</td>
-                                            <td style={{ fontSize: '12px', color: '#6b7280' }}>
+                                            <td style={{ fontSize: '10px', color: '#6b7280' }}>
                                                 <div>24h: {campaign.sent || 0}/{campaign.dailyLimit || 1000}</div>
                                                 <div>Total: {campaign.sent || 0}/{campaign.totalLimit || 1000}</div>
                                             </td>
@@ -452,7 +452,7 @@ function DashboardTab({ stats, campaigns, onReload }) {
                                                         {!isRunning && (
                                                             <button 
                                                                 className="btn btn-success" 
-                                                                style={{ padding: '6px 12px', fontSize: '12px' }}
+                                                                style={{ padding: '4px 8px', fontSize: '10px' }}
                                                                 onClick={() => handleStartCampaign(campaign.id)}
                                                             >
                                                                 ▶️ Start
@@ -461,7 +461,7 @@ function DashboardTab({ stats, campaigns, onReload }) {
                                                         {isRunning && (
                                                             <button 
                                                                 className="btn btn-secondary" 
-                                                                style={{ padding: '6px 12px', fontSize: '12px' }}
+                                                                style={{ padding: '4px 8px', fontSize: '10px' }}
                                                                 onClick={() => handlePauseCampaign(campaign.id)}
                                                             >
                                                                 ⏸️ Pause
@@ -470,7 +470,7 @@ function DashboardTab({ stats, campaigns, onReload }) {
                                                     </div>
                                                 )}
                                             </td>
-                                            <td style={{ color: '#6b7280', fontSize: '14px' }}>{new Date(campaign.createdAt).toLocaleString()}</td>
+                                            <td style={{ color: '#6b7280', fontSize: '10px' }}>{new Date(campaign.createdAt).toLocaleString()}</td>
                                     </tr>
                                     );
                                 })}

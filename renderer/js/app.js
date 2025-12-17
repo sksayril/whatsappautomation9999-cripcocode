@@ -250,13 +250,13 @@ function App() {
                         <span className="sidebar-nav-item-icon">📋</span>
                         <span className="sidebar-nav-item-text">Logs</span>
                     </div>
-                    <div 
+                    {/* <div 
                         className={`sidebar-nav-item ${activeTab === 'automated-messages' ? 'active' : ''}`} 
                         onClick={() => setActiveTab('automated-messages')}
                     >
                         <span className="sidebar-nav-item-icon">🤖</span>
                         <span className="sidebar-nav-item-text">Auto Messages</span>
-                    </div>
+                    </div> */}
                 </nav>
 
                 <div className="sidebar-footer">
@@ -272,7 +272,7 @@ function App() {
             <div className="app-main">
                 <div className="header">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                        <h1 style={{ margin: 0, fontSize: '28px' }}>
+                        <h1 style={{ margin: 0, fontSize: '18px' }}>
                             {activeTab === 'connection' && '🔗 Connection'}
                             {activeTab === 'dashboard' && '📊 Dashboard'}
                             {activeTab === 'contacts' && '👥 Contacts'}

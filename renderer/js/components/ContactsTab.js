@@ -61,9 +61,9 @@ function ContactsTab({ contacts, onReload }) {
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
-                    fontSize: '28px',
+                    fontSize: '18px',
                     fontWeight: '800',
-                    letterSpacing: '-0.5px',
+                    letterSpacing: '-0.3px',
                     margin: 0
                 }}>👥 Contacts</h2>
                 <button className="btn btn-primary" onClick={handleFileSelect}>
@@ -72,8 +72,8 @@ function ContactsTab({ contacts, onReload }) {
             </div>
 
             {showUpload && (
-                <div className="card" style={{ marginBottom: '20px' }}>
-                    <h3 style={{ marginBottom: '16px', color: '#00BFFF', fontSize: '20px', fontWeight: '700' }}>📤 CSV Upload</h3>
+                <div className="card" style={{ marginBottom: '12px' }}>
+                    <h3 style={{ marginBottom: '12px', color: '#00BFFF', fontSize: '14px', fontWeight: '700' }}>📤 CSV Upload</h3>
                     <div style={{ 
                         background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%)',
                         padding: '16px',
@@ -173,7 +173,7 @@ function ContactsTab({ contacts, onReload }) {
                                         </span>
                                     </td>
                                     <td>
-                                        <button className="btn btn-danger" style={{ padding: '6px 12px', fontSize: '12px' }} onClick={() => handleDelete(contact.id)}>
+                                        <button className="btn btn-danger" style={{ padding: '4px 8px', fontSize: '10px' }} onClick={() => handleDelete(contact.id)}>
                                             Delete
                                         </button>
                                     </td>
