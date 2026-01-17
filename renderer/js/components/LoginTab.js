@@ -12,8 +12,8 @@ function LoginTab({ onLogin }) {
         setIsLoading(true);
 
         // Hardcoded credentials
-        const validEmail = 'pratik123@skystar.co.in';
-        const validPassword = 'Pratik123@';
+        const validEmail = 'admin123@datahive.co.in';
+        const validPassword = 'Admin123@';
 
         // Simulate login delay for better UX
         setTimeout(() => {

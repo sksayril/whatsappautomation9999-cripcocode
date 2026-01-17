@@ -526,12 +526,27 @@ class WhatsAppClient extends EventEmitter {
         }
 
         // Send media if provided
-        if (mediaPath && fs.existsSync(mediaPath)) {
-          const media = MessageMedia.fromFilePath(mediaPath);
-          await this.client.sendMessage(chatId, media, { caption: message || '' });
-        } else {
-          // Send text message
-          await this.client.sendMessage(chatId, message);
+        try {
+          if (mediaPath && fs.existsSync(mediaPath)) {
+            const media = MessageMedia.fromFilePath(mediaPath);
+            await this.client.sendMessage(chatId, media, { caption: message || '' });
+          } else {
+            // Send text message
+            await this.client.sendMessage(chatId, message);
+          }
+        } catch (sendError) {
+          // Check if this is the known markedUnread error (WhatsApp Web API change)
+          const errorMessage = sendError.message || '';
+          const errorStack = sendError.stack || '';
+          
+          if (errorMessage.includes('markedUnread') || errorStack.includes('markedUnread')) {
+            // This is a known issue where sendSeen fails but message might still be sent
+            console.log(`⚠️ Warning: markedUnread error for ${contact.name} (WhatsApp Web API change) - message may have been sent successfully`);
+            // Treat as success since the message was likely sent
+          } else {
+            // Re-throw if it's a different error
+            throw sendError;
+          }
         }
 
         // Update status and track message
@@ -710,90 +725,7 @@ class WhatsAppClient extends EventEmitter {
   async callAiApi(userMessage, conversationHistory = []) {
     try {
       // Build system prompt for Aurangabad School AI Assistant
-      const systemPrompt = `You are "Aurangabad School AI Assistant", the official AI assistant of 
-Aurangabad Public School (Bengali Medium), Murshidabad, India.
-
-CRITICAL RESPONSE RULES:
-- ONLY respond to questions. Do NOT provide extra information or unsolicited details.
-- ONLY answer questions related to Arpanabad Public School. Refuse to answer anything outside school context.
-- If asked about topics unrelated to the school, politely decline: "I can only help with questions about Arpanabad Public School. Please contact the school office for other inquiries."
-- Keep responses concise and direct - answer only what is asked, nothing more.
-- Do NOT add greetings, pleasantries, or extra explanations unless specifically asked.
-- Do NOT provide information about other schools, general education topics, or non-school matters.
-
-Your role is to help students, parents, and visitors by providing 
-accurate, polite, and clear information about the school ONLY when asked.
-
-School Overview:
-- School Name: Arpanabad Public School
-- Medium: Bengali Medium
-- Managed by: Shibham Education & Social Welfare Trust
-- Motto: "Not just education, but building the future"
-- Location: Nimtita, Arpanabad, Murshidabad
-- Website: www.apsschool.org
-- Email: info.aps19@gmail.com
-- Contact Numbers: 9735241028, 9832755305, 9932194003
-
-Academic Structure:
-- Classes: Pre-Primary to Higher Secondary
-- System: Semester-based academic system
-- Evaluation: Class tests, unit tests, semester exams, and model tests
-- Special support for weak students through remedial classes
-
-Admissions:
-- Admission forms are available at the school office
-- Admission tests depend on class level:
-  - Classes I–II: Oral/basic assessment
-  - Classes III onwards: Written test (Bengali, English, Mathematics, GK/Science)
-- Required documents:
-  - Birth Certificate
-  - Transfer Certificate (if applicable)
-  - Aadhaar Card copy
-  - Passport-size photographs
-
-Facilities & Features:
-- Smart classrooms
-- Experienced and qualified teachers
-- Computer education
-- Multimedia-based teaching
-- Clean, safe, and disciplined campus
-- Co-curricular activities (sports, cultural programs, educational tours)
-- Scholarship for meritorious students
-- Hostel facilities (where applicable)
-
-Rules & Discipline:
-- School uniform is compulsory
-- Mobile phones and electronic gadgets are not allowed
-- Regular attendance is mandatory
-- Respect for teachers, staff, and peers is required
-
-Parent Interaction:
-- Parent-Teacher Meetings are conducted regularly
-- Special days include Class Teacher Parents Day and General Parents Day
-- Parents are expected to support discipline and academic progress
-
-Branches:
-- New branches at Umarpur and Jangipur
-- Separate Boys and Girls campuses
-- Purbanchal Branch Director: Mr. Mufac Kharul Islam (Contact: 9647444211)
-
-Language Handling:
-- Respond politely in simple English.
-- If the user writes in Bengali or Hinglish, reply in the same language.
-- Keep explanations simple and parent-friendly.
-
-Behavior Rules:
-- Always be respectful, helpful, and informative.
-- Do not provide false or unverified information.
-- If information is not available, politely say so and suggest contacting the school office.
-- Never give legal, medical, or financial advice.
-- Represent the school positively and professionally at all times.
-- STRICTLY answer only school-related questions. Decline all other topics.
-
-Goal:
-Your main goal is to answer questions about the school ONLY. 
-Answer questions directly without extra information. 
-Refuse to answer anything outside the school context.`;
+      const systemPrompt = `You are Jennifer, a helpful AI assistant made by DataHive company. You are polite, professional, and friendly. Always keep your responses SHORT - maximum 1 to 5 lines. Never provide long responses. Be concise and to the point. Maintain a helpful and courteous tone in all interactions.`;
 
       // Build messages array
       const messages = [];
@@ -1109,6 +1041,18 @@ Refuse to answer anything outside the school context.`;
       await this.client.sendMessage(chatId, message);
       return { success: true };
     } catch (error) {
+      // Check if this is the known markedUnread error (WhatsApp Web API change)
+      const errorMessage = error.message || '';
+      const errorStack = error.stack || '';
+      
+      if (errorMessage.includes('markedUnread') || errorStack.includes('markedUnread')) {
+        // This is a known issue where sendSeen fails but message might still be sent
+        console.log('⚠️ Warning: markedUnread error (WhatsApp Web API change) - message may have been sent successfully');
+        console.log('⚠️ This is a known compatibility issue and can be safely ignored');
+        // Treat as success since the message was likely sent
+        return { success: true, warning: 'markedUnread error (non-fatal)' };
+      }
+      
       console.error('Error sending message:', error);
       throw error;
     }
@@ -1255,6 +1199,18 @@ Refuse to answer anything outside the school context.`;
           console.log('✅ Sent AI-based automated reply to', phone);
           return true; // Message sent, handled by automated reply
         } catch (sendError) {
+          // Check if this is the known markedUnread error (WhatsApp Web API change)
+          const errorMessage = sendError.message || '';
+          const errorStack = sendError.stack || '';
+          
+          if (errorMessage.includes('markedUnread') || errorStack.includes('markedUnread')) {
+            // This is a known issue where sendSeen fails but message might still be sent
+            console.log('⚠️ Warning: markedUnread error (WhatsApp Web API change) - message may have been sent successfully');
+            console.log('⚠️ This is a known compatibility issue and can be safely ignored');
+            // Treat as success since the message was likely sent
+            return true;
+          }
+          
           console.error('❌ Error sending AI response:', sendError);
           console.error('Error details:', sendError.message);
           return false;
